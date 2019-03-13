@@ -2,6 +2,10 @@ const Sequelize = require('sequelize')
 const sequelize = require('../db')
 
 const Company = sequelize.define('company', {
+    companyId: {
+        type: Sequelize.INTEGER,
+        field: 'company_id'
+    },
     name: {
         type: Sequelize.STRING,
         field: 'name',
@@ -21,8 +25,6 @@ const Company = sequelize.define('company', {
     {
         timestamps: false,
         tableName: 'companies'
-
-
     })
 
 module.exports = Company

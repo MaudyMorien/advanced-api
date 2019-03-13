@@ -32,5 +32,6 @@ const Customer = sequelize.define('customers', {
   timestamps: false,
   tableName: 'customers'
 })
+Customer.belongsTo(Company)
 
 module.exports = Customer
