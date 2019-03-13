@@ -4,16 +4,21 @@ const Company = require('./model')
 const router = new Router()
 
 router.get('/companies', (req, res, next) => {
-    Company
-    .findAll()
-    .then(company => {
-      res.send({ company })
+  const limit = req.query.limit || 25
+  const offset = req.query.offset || 0
+
+  Promise.all([
+    Company.findAndCountAll({ limit, offset })
+  ])
+    .then(([companies]) => {
+      res.send({
+        companies
+      })
     })
     .catch(error => next(error))
 })
-
 router.get('/companies/:id', (req, res, next) => {
-    Company
+  Company
     .findById(req.params.id)
     .then(company => {
       if (!company) {
@@ -27,7 +32,7 @@ router.get('/companies/:id', (req, res, next) => {
 })
 
 router.post('/companies', (req, res, next) => {
-    Company
+  Company
     .create(req.body)
     .then(company => {
       if (!company) {

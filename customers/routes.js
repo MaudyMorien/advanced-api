@@ -1,20 +1,27 @@
 const { Router } = require('express')
 const Customer = require('./model')
+const Company = require('../companies/model')
 
 const router = new Router()
 
 router.get('/customers', (req, res, next) => {
-  Customer
-    .findAll()
-    .then(customers => {
-      res.send({ customers })
+  const limit = req.query.limit || 25
+  const offset = req.query.offset || 0
+
+  Promise.all([
+    Customer.findAndCountAll({ limit, offset })
+  ])
+    .then(([customers]) => {
+      res.send({
+        customers
+      })
     })
     .catch(error => next(error))
 })
 
 router.get('/customers/:id', (req, res, next) => {
   Customer
-    .findById(req.params.id)
+    .findById(req.params.id, { include: [Company] })
     .then(customer => {
       if (!customer) {
         return res.status(404).send({
